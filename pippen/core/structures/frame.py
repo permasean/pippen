@@ -24,22 +24,7 @@ class Frame:
         else:
             raise TypeError('data must be of type dict')
 
-    def load_csv(self, csv_path:str, configs:map={}) -> None:
-        if not isinstance(csv_path, str): 
-            raise TypeError('csv_path must be of type str')
-
-        if not isinstance(configs, dict): 
-            raise TypeError('configs must be of type dict')
-
-        self._validate_configs(configs)
-        loader = CsvLoader()
-        loader.configure(configs) 
-        self.set_data(loader.load_csv(csv_path)) # returns dict
-
     def _adjust_batch_size(self) -> None:
         mp.cpu_count()
         # Calculate optimal batch size from file
         print('PLACEHOLDER')
-
-    def _validate_configs(self, configs:map) -> None:
-        print('CONFIG VALIDATION PLACEHOLDER')

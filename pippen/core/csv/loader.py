@@ -22,7 +22,7 @@ class CsvLoader:
                     'int'
                 )
 
-    def load_csv(self, csv_path:str, header:list=None) ->  dict:
+    def load_csv(self, csv_path:str, header:list=None, mode:str="standard") ->  dict:
         if not isinstance(csv_path, str):
             raise TypeError('csv_path must be of type str')
         

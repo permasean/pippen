@@ -8,6 +8,7 @@ line.
 
 from pippen.core.structures.frame import Frame
 from pippen.core.structures.tuple import FuncTuple
+from pippen.core.csv.loader import CsvLoader
 
 class Pippen:
     def __init__(self) -> None:
@@ -17,6 +18,17 @@ class Pippen:
     def delete_column(self, column_name: str) -> None:
         func_tuple = FuncTuple(self.__delete_column, [column_name])
         self.func_queue.append(func_tuple)
+
+    def load_csv(self, csv_path:str, configs:map={}) -> Frame:
+        if not isinstance(csv_path, str): 
+            raise TypeError('csv_path must be of type str')
+
+        if not isinstance(configs, dict): 
+            raise TypeError('configs must be of type dict')
+
+        loader = CsvLoader()
+        loader.configure(configs) 
+        return loader.load_csv(csv_path)
 
     def __delete_column(self, column_name: str) -> None:
         self.frame.delete_column(column_name)
