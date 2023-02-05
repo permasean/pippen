@@ -19,7 +19,7 @@ class Pippen:
         func_tuple = FuncTuple(self.__delete_column, [column_name])
         self.func_queue.append(func_tuple)
 
-    def load_csv(self, csv_path:str, configs:map={}) -> Frame:
+    def load_csv(self, csv_path:str, header:list=None, mode:str="standard", configs:map={}) -> Frame:
         if not isinstance(csv_path, str): 
             raise TypeError('csv_path must be of type str')
 
@@ -28,7 +28,7 @@ class Pippen:
 
         loader = CsvLoader()
         loader.configure(configs) 
-        return loader.load_csv(csv_path)
+        return loader.load_csv(csv_path, header=header, mode=mode)
 
     def __delete_column(self, column_name: str) -> None:
         self.frame.delete_column(column_name)

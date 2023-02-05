@@ -1,4 +1,6 @@
 from pippen.core.exceptions import configuration
+from pippen.core.csv import helper
+import multiprocessing as mp
 import csv
 
 class CsvLoader:
@@ -6,8 +8,6 @@ class CsvLoader:
         self.configs = {
             'MAX_LOAD_SIZE': 50000,
         }
-        self.data = {}
-        self.header = []
 
     def configure(self, configs:dict) -> None:
         if not isinstance(configs, dict):
@@ -29,36 +29,22 @@ class CsvLoader:
         if not isinstance(header, list) and not None:
             raise TypeError('header must be of type list')
 
-        # if header is None, assume CSV has header
-        if header is not None:
-            self.header = header
+        if not isinstance(mode, str):
+            raise TypeError('mode must be of type str')
+
+        if header is None:
+            print('header not set, inferring based on first row')
 
         with open(csv_path) as csvfile:
             reader = csv.reader(csvfile)
-            for i, row in enumerate(reader):
-                if i == 0:
-                    if header is None:
-                        self.header = row
-                    self._initialize_header(len(row))
-                else:
-                    for j, column_value in enumerate(row):
-                        self.data[self.header[j]][i] = column_value
 
-        return self.data
+            if mode == 'standard':
+                frame = helper.load_csv_standard(reader, header)
 
-    def _initialize_header(self, expected_columns_count:int) -> None:
-        if not isinstance(expected_columns_count, int):
-            raise TypeError('expected_columns_count must be of type int')
+        return frame
 
-        self._validate_header(expected_columns_count)
-        for column_name in self.header:
-            self.data[column_name] = {}
-            
-    def _validate_header(self, expected_columns_count:int) -> None:
-        if not isinstance(expected_columns_count, int):
-            raise TypeError('expected_columns_count must be of type int')
-            
-        if len(self.header) != expected_columns_count:
-            msg = 'header length does not match number of columns in file'
-            raise ValueError(msg)
+    def _adjust_batch_size(self) -> None:
+        mp.cpu_count()
+        # Calculate optimal batch size from file
+        print('PLACEHOLDER')
 

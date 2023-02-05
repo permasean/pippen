@@ -1,13 +1,15 @@
-from pippen.core.csv.loader import CsvLoader
-import multiprocessing as mp
-import numpy as np
-import sys
-
 class Frame:
-    def __init__(self) -> None:
+    def __init__(self, mode:str="standard") -> None:
         # { column_name1: {}, column_name2: {}}
-        self.data = {}
-        self.configs = {'LOAD_MAX_SIZE':50000}
+        if not isinstance(mode, str):
+            raise TypeError('mode must be of type str')
+
+        if mode == 'standard':
+            self.data = []
+        elif mode == 'experimental':
+            self.data = {}
+        
+        self.header = []
 
     def delete_column(self, column_name:str) -> None:
         if not isinstance(column_name, str): 
@@ -24,7 +26,8 @@ class Frame:
         else:
             raise TypeError('data must be of type dict')
 
-    def _adjust_batch_size(self) -> None:
-        mp.cpu_count()
-        # Calculate optimal batch size from file
-        print('PLACEHOLDER')
+    def set_header(self, header:list) -> None:
+        if not isinstance(header, list):
+            raise TypeError('header must be of type list')
+            
+        self.header = header
