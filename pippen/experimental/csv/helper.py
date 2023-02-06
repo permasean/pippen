@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from pippen.core.structures.frame import Frame
 
-def load_csv_dict_of_columns_with_dict_of_numbered_rows(reader:Iterable[str], header:list=None) -> Frame:
+def load_csv_nested_dict(reader:Iterable[str], header:list=None) -> Frame:
     if not isinstance(reader, Iterable):
         raise TypeError('reader must of type iterable')
 
