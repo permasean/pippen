@@ -1,3 +1,5 @@
+from typing import Union
+
 class Frame:
     def __init__(self, mode:str="standard") -> None:
         # { column_name1: {}, column_name2: {}}
@@ -5,8 +7,10 @@ class Frame:
             raise TypeError('mode must be of type str')
 
         if mode == 'standard':
+            self.mode = 'standard'
             self.data = []
         elif mode == 'experimental':
+            self.mode = 'experimental'
             self.data = {}
         
         self.header = []
@@ -15,19 +19,34 @@ class Frame:
         if not isinstance(column_name, str): 
             raise TypeError('column_name must be of type str')
 
-        if column_name in self.data:
-            del self.data[column_name]
-        else:
-            print('Column does not exist')
+        if isinstance(self.data, list):
+            try: 
+                column_name_idx = self.header.index(column_name)
+                for i, row in enumerate(self.data):
+                    del row[column_name_idx]
+                    self.data[i] = row
 
-    def set_data(self, data:dict) -> None:
-        if isinstance(data, dict):
+            except ValueError:
+                print('Column does not exist')
+            
+        if isinstance(self.data, dict):
+            if column_name in self.data:
+                del self.data[column_name]
+            else:
+                print('Column does not exist')
+
+    def set_data(self, data:Union[list, dict]) -> None:
+        if isinstance(data, list) and self.mode == 'standard':
+            self.data = data
+        elif isinstance(data, dict) and self.mode == 'experimental':
             self.data = data
         else:
-            raise TypeError('data must be of type dict')
+            msg = 'data must be of type list if ' + \
+            'standard mode or dict if experimental mode'
+            raise TypeError(msg)
 
     def set_header(self, header:list) -> None:
         if not isinstance(header, list):
             raise TypeError('header must be of type list')
-            
+
         self.header = header
